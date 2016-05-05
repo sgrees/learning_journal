@@ -3,8 +3,12 @@ from sqlalchemy import (
     Index,
     Integer,
     Text,
+    Unicode,
+    UnicodeText,
+    DateTime,
     )
 
+from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
 
 from sqlalchemy.orm import (
@@ -18,10 +22,15 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
 
-class MyModel(Base):
-    __tablename__ = 'models'
+class Entry(Base):
+    __tablename__ = 'entries'
     id = Column(Integer, primary_key=True)
-    name = Column(Text)
-    value = Column(Integer)
+    title = Column(Unicode(255), nullable=False, unique=True)
+    body = Column(UnicodeText())
+    created = Column(DateTime(timezone=True), default=func.now())
+    edited = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
 
-Index('my_index', MyModel.name, unique=True, mysql_length=255)
+# classmethod all that returns all the entries in the database, ordered so that the most recent entry is first.
+# classmethod by_id that returns a single entry, given an id.
+
+Index('my_index', Entry.name, unique=True, mysql_length=255)
