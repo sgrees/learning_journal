@@ -1,2 +1,5 @@
 *.pyc
 .DS_Store
+.learning_journal.egg-info
+*.sqlite
+*.learning_journal.egg-info
